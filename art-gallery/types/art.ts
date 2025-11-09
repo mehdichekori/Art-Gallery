@@ -8,6 +8,15 @@ export interface ArtPiece {
   description?: string;
   objectId?: string;
   wikiUrl?: string;
+  objectUrl?: string;
+  dimensions?: string;
+  culture?: string;
+  period?: string;
+  classification?: string;
+  creditLine?: string;
+  department?: string;
+  primaryImageSmall?: string;
+  tags?: string[];
 }
 
 export interface MetMuseumObject {
@@ -16,11 +25,20 @@ export interface MetMuseumObject {
   primaryImageSmall: string;
   title: string;
   artistDisplayName: string;
+  artistNationality?: string;
+  artistBeginDate?: string;
+  artistEndDate?: string;
   objectDate: string;
   medium: string;
+  dimensions: string;
   repository: string;
   objectURL: string;
   tags?: Array<{ term: string }>;
+  culture?: string;
+  period?: string;
+  classification?: string;
+  creditLine?: string;
+  department?: string;
 }
 
 export interface RijksmuseumObject {
