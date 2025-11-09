@@ -111,24 +111,43 @@ export default function Gallery() {
 
   return (
     <div className="gallery-container">
-      <AnimatePresence mode="wait">
-        {currentArt && (
-          <ArtDisplay
-            key={currentArt.objectId || currentArt.title}
+      {!expandedInfo ? (
+        <>
+          <AnimatePresence mode="wait">
+            {currentArt && (
+              <ArtDisplay
+                key={currentArt.objectId || currentArt.title}
+                artPiece={currentArt}
+                onClick={handleArtworkClick}
+                frameStyle={currentFrame}
+                isExpanded={false}
+              />
+            )}
+          </AnimatePresence>
+
+          {currentArt && !isTransitioning && <MetadataLabel artPiece={currentArt} />}
+        </>
+      ) : (
+        <div className="expanded-layout">
+          <AnimatePresence mode="wait">
+            {currentArt && (
+              <ArtDisplay
+                key={currentArt.objectId || currentArt.title}
+                artPiece={currentArt}
+                onClick={handleArtworkClick}
+                frameStyle={currentFrame}
+                isExpanded={true}
+              />
+            )}
+          </AnimatePresence>
+
+          <ExpandedInfo
             artPiece={currentArt}
-            onClick={handleArtworkClick}
-            frameStyle={currentFrame}
+            isOpen={expandedInfo}
+            onClose={handleCloseExpanded}
           />
-        )}
-      </AnimatePresence>
-
-      {currentArt && !isTransitioning && <MetadataLabel artPiece={currentArt} />}
-
-      <ExpandedInfo
-        artPiece={currentArt}
-        isOpen={expandedInfo}
-        onClose={handleCloseExpanded}
-      />
+        </div>
+      )}
 
       {/* Preload indicator */}
       {nextArt && <div style={{ display: 'none' }} />}

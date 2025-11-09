@@ -52,7 +52,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  background: #ffffff;
+}
+
+.expanded-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  width: 100%;
+  height: 100%;
 }
 
 /* Loading and Error States */
@@ -237,7 +246,161 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Expanded Info Panel */
+/* Museum Information Panel - Professional Museum Style */
+.museum-info-panel {
+  position: fixed;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
+  width: 420px;
+  max-height: 85vh;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  overflow-y: auto;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+}
+
+.museum-info-panel-inline {
+  width: 420px;
+  max-height: 85vh;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  overflow-y: auto;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+}
+
+.museum-panel-content {
+  padding: 2.5rem;
+}
+
+.museum-panel-header {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.museum-panel-details {
+  color: #1a1a1a;
+}
+
+.museum-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+.museum-artist {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  margin-bottom: 2rem;
+  color: #4a4a4a;
+}
+
+.museum-metadata-section {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1.5rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.metadata-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.metadata-row:last-child {
+  margin-bottom: 0;
+}
+
+.metadata-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metadata-value {
+  text-align: right;
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  max-width: 60%;
+}
+
+.museum-credit-line {
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: #f8f8f8;
+  border-left: 3px solid var(--frame-color);
+}
+
+.museum-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.museum-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.museum-tag {
+  padding: 0.4rem 0.8rem;
+  background: #f0f0f0;
+  color: #555;
+  font-size: 0.85rem;
+  border-radius: 3px;
+}
+
+.museum-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.museum-link-button {
+  padding: 0.75rem 1.25rem;
+  background: #1a1a1a;
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.2s;
+  border: 1px solid #1a1a1a;
+}
+
+.museum-link-button:hover {
+  background: #333;
+}
+
+.museum-link-button.secondary {
+  background: #ffffff;
+  color: #1a1a1a;
+  border: 1px solid #1a1a1a;
+}
+
+.museum-link-button.secondary:hover {
+  background: #f0f0f0;
+}
+
+/* Legacy Expanded Info Panel (for reference) */
 .expanded-backdrop {
   position: fixed;
   top: 0;
@@ -270,26 +433,24 @@ body {
 }
 
 .close-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #fff;
-  font-size: 2rem;
+  width: 36px;
+  height: 36px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  color: #1a1a1a;
+  font-size: 1.75rem;
   line-height: 1;
   cursor: pointer;
   border-radius: 50%;
-  transition: background 0.2s;
+  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .close-button:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #e0e0e0;
+  border-color: #ccc;
 }
 
 .expanded-title {
@@ -353,6 +514,18 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .expanded-layout {
+    gap: 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .museum-info-panel-inline {
+    width: calc(100vw - 80px);
+    max-width: 500px;
+  }
+
   .metadata-label {
     bottom: 20px;
     left: 20px;
@@ -392,6 +565,20 @@ body {
   .expanded-artist {
     font-size: 1.3rem;
   }
+
+  .museum-info-panel {
+    width: calc(100vw - 80px);
+    right: 20px;
+    max-width: 380px;
+  }
+
+  .museum-title {
+    font-size: 1.6rem;
+  }
+
+  .museum-artist {
+    font-size: 1.2rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -401,5 +588,31 @@ body {
 
   .frame-classic, .frame-gold, .frame-ornate {
     border-width: 10px;
+  }
+
+  .expanded-layout {
+    gap: 20px;
+  }
+
+  .museum-info-panel-inline {
+    width: calc(100vw - 40px);
+    max-width: none;
+  }
+
+  .museum-panel-content {
+    padding: 1.5rem;
+  }
+
+  .museum-title {
+    font-size: 1.4rem;
+  }
+
+  .museum-artist {
+    font-size: 1.1rem;
+  }
+
+  .metadata-label,
+  .metadata-value {
+    font-size: 0.85rem;
   }
 }

@@ -48,7 +48,7 @@ export async function getRandomMetPainting(): Promise<ArtPiece | null> {
           continue;
         }
 
-        // Create the ArtPiece
+        // Create the ArtPiece with enriched metadata
         const artPiece: ArtPiece = {
           title: artwork.title || 'Untitled',
           artist: artwork.artistDisplayName || 'Unknown Artist',
@@ -58,7 +58,15 @@ export async function getRandomMetPainting(): Promise<ArtPiece | null> {
           museum: 'The Metropolitan Museum of Art',
           description: `A ${artwork.medium || 'painting'} from the collection of The Metropolitan Museum of Art.`,
           objectId: artwork.objectID.toString(),
-          wikiUrl: artwork.objectURL,
+          objectUrl: artwork.objectURL,
+          dimensions: artwork.dimensions || undefined,
+          culture: artwork.culture || undefined,
+          period: artwork.period || undefined,
+          classification: artwork.classification || undefined,
+          creditLine: artwork.creditLine || undefined,
+          department: artwork.department || undefined,
+          primaryImageSmall: artwork.primaryImageSmall || undefined,
+          tags: artwork.tags ? artwork.tags.map(tag => tag.term).filter(Boolean) : undefined,
         };
 
         return artPiece;

@@ -11,65 +11,110 @@ interface ExpandedInfoProps {
 }
 
 export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfoProps) {
-  if (!artPiece) return null;
+  if (!artPiece || !isOpen) return null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            className="expanded-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-          />
+    <motion.div
+      className="museum-info-panel-inline"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 20 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
+    >
+      <div className="museum-panel-content">
+        <div className="museum-panel-header">
+          <button className="close-button" onClick={onClose} aria-label="Close">
+            ×
+          </button>
+        </div>
 
-          {/* Panel */}
-          <motion.div
-            className="expanded-panel"
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          >
-            <div className="expanded-content">
-              <button className="close-button" onClick={onClose} aria-label="Close">
-                ×
-              </button>
+        <div className="museum-panel-details">
+          <h2 className="museum-title">{artPiece.title}</h2>
+          <h3 className="museum-artist">{artPiece.artist}</h3>
 
-              <div className="expanded-details">
-                <h2 className="expanded-title">{artPiece.title}</h2>
-                <h3 className="expanded-artist">{artPiece.artist}</h3>
-
-                <div className="expanded-metadata">
-                  <p><strong>Year:</strong> {artPiece.year}</p>
-                  <p><strong>Medium:</strong> {artPiece.medium}</p>
-                  <p><strong>Museum:</strong> {artPiece.museum}</p>
-                </div>
-
-                {artPiece.description && (
-                  <div className="expanded-description">
-                    <p>{artPiece.description}</p>
-                  </div>
-                )}
-
-                {artPiece.wikiUrl && (
-                  <a
-                    href={artPiece.wikiUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="wikipedia-link"
-                  >
-                    Learn more on Wikipedia
-                  </a>
-                )}
-              </div>
+          <div className="museum-metadata-section">
+            <div className="metadata-row">
+              <span className="metadata-label">Date</span>
+              <span className="metadata-value">{artPiece.year}</span>
             </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+            <div className="metadata-row">
+              <span className="metadata-label">Medium</span>
+              <span className="metadata-value">{artPiece.medium}</span>
+            </div>
+            {artPiece.dimensions && (
+              <div className="metadata-row">
+                <span className="metadata-label">Dimensions</span>
+                <span className="metadata-value">{artPiece.dimensions}</span>
+              </div>
+            )}
+            {artPiece.culture && (
+              <div className="metadata-row">
+                <span className="metadata-label">Culture</span>
+                <span className="metadata-value">{artPiece.culture}</span>
+              </div>
+            )}
+            {artPiece.classification && (
+              <div className="metadata-row">
+                <span className="metadata-label">Classification</span>
+                <span className="metadata-value">{artPiece.classification}</span>
+              </div>
+            )}
+            {artPiece.department && (
+              <div className="metadata-row">
+                <span className="metadata-label">Department</span>
+                <span className="metadata-value">{artPiece.department}</span>
+              </div>
+            )}
+            <div className="metadata-row">
+              <span className="metadata-label">Accession Number</span>
+              <span className="metadata-value">{artPiece.objectId}</span>
+            </div>
+          </div>
+
+          {artPiece.creditLine && (
+            <div className="museum-credit-line">
+              <p>{artPiece.creditLine}</p>
+            </div>
+          )}
+
+          {artPiece.description && (
+            <div className="museum-description">
+              <p>{artPiece.description}</p>
+            </div>
+          )}
+
+          {artPiece.tags && artPiece.tags.length > 0 && (
+            <div className="museum-tags">
+              {artPiece.tags.map((tag, index) => (
+                <span key={index} className="museum-tag">{tag}</span>
+              ))}
+            </div>
+          )}
+
+          <div className="museum-links">
+            {artPiece.objectUrl && (
+              <a
+                href={artPiece.objectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="museum-link-button"
+              >
+                View on Museum Website
+              </a>
+            )}
+            {artPiece.wikiUrl && (
+              <a
+                href={artPiece.wikiUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="museum-link-button secondary"
+              >
+                Learn More
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }
