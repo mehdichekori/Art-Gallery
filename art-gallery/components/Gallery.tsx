@@ -71,24 +71,38 @@ export default function Gallery() {
 
     setIsTransitioning(true);
 
-    // Wait for transition animation
+    // Smooth transition with fade out and in
     setTimeout(() => {
       setCurrentArt(nextArt);
       setNextArt(null);
       selectRandomFrame();
-      setIsTransitioning(false);
+
+      // Delay turning off transitioning to allow for fade-in animation
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 800);
 
       // Start loading the next artwork
       loadArtwork(true);
-    }, 500);
+    }, 600);
   };
 
-  const handleArtworkClick = () => {
+  const handleArtworkClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setExpandedInfo(true);
   };
 
-  const handleCloseExpanded = () => {
+  const handleCloseExpanded = (e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
     setExpandedInfo(false);
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleCloseExpanded();
+    }
   };
 
   if (isLoading) {
@@ -110,44 +124,50 @@ export default function Gallery() {
   }
 
   return (
-    <div className="gallery-container">
-      {!expandedInfo ? (
-        <>
-          <AnimatePresence mode="wait">
-            {currentArt && (
-              <ArtDisplay
-                key={currentArt.objectId || currentArt.title}
-                artPiece={currentArt}
-                onClick={handleArtworkClick}
-                frameStyle={currentFrame}
-                isExpanded={false}
-              />
-            )}
-          </AnimatePresence>
-
-          {currentArt && !isTransitioning && <MetadataLabel artPiece={currentArt} />}
-        </>
-      ) : (
-        <div className="expanded-layout">
-          <AnimatePresence mode="wait">
-            {currentArt && (
-              <ArtDisplay
-                key={currentArt.objectId || currentArt.title}
-                artPiece={currentArt}
-                onClick={handleArtworkClick}
-                frameStyle={currentFrame}
-                isExpanded={true}
-              />
-            )}
-          </AnimatePresence>
-
-          <ExpandedInfo
+    <div
+      className="gallery-container"
+      onClick={expandedInfo ? (e) => {
+        // Close on any click on screen when panel is open
+        handleBackdropClick(e);
+      } : undefined}
+    >
+      <AnimatePresence mode="wait">
+        {currentArt && !expandedInfo && (
+          <ArtDisplay
+            key={currentArt.objectId || currentArt.title}
             artPiece={currentArt}
-            isOpen={expandedInfo}
-            onClose={handleCloseExpanded}
+            onClick={handleArtworkClick}
+            frameStyle={currentFrame}
+            isExpanded={false}
+            isTransitioning={isTransitioning}
           />
-        </div>
-      )}
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {currentArt && !isTransitioning && !expandedInfo && (
+          <MetadataLabel artPiece={currentArt} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {currentArt && expandedInfo && (
+          <div className="artwork-with-panel-container" onClick={(e) => e.stopPropagation()}>
+            <ArtDisplay
+              artPiece={currentArt}
+              onClick={handleArtworkClick}
+              frameStyle={currentFrame}
+              isExpanded={true}
+              isTransitioning={isTransitioning}
+            />
+            <ExpandedInfo
+              artPiece={currentArt}
+              isOpen={expandedInfo}
+              onClose={handleCloseExpanded}
+            />
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Preload indicator */}
       {nextArt && <div style={{ display: 'none' }} />}
