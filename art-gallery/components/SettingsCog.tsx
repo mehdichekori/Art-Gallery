@@ -7,32 +7,52 @@ import SettingsPanel from './SettingsPanel';
 export default function SettingsCog() {
   const [showCog, setShowCog] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
+  const [isMouseOnScreen, setIsMouseOnScreen] = useState(false);
   const [lastMouseMove, setLastMouseMove] = useState(Date.now());
 
-  // Handle mouse movement to show/hide cog
+  // Handle mouse entering/leaving the document
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    const handleMouseEnter = () => {
+      setIsMouseOnScreen(true);
+      setShowCog(true);
+      setLastMouseMove(Date.now());
+    };
+
+    const handleMouseLeave = () => {
+      setIsMouseOnScreen(false);
+      setShowCog(false);
+      setShowPanel(false);
+    };
 
     const handleMouseMove = () => {
       setLastMouseMove(Date.now());
-      setShowCog(true);
-
-      // Hide cog after 3 seconds of no movement
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        if (Date.now() - lastMouseMove >= 3000) {
-          setShowCog(false);
-          setShowPanel(false);
-        }
-      }, 3000);
+      if (isMouseOnScreen) {
+        setShowCog(true);
+      }
     };
 
+    document.addEventListener('mouseenter', handleMouseEnter);
+    document.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('mousemove', handleMouseMove);
+
     return () => {
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      document.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('mousemove', handleMouseMove);
-      clearTimeout(timeoutId);
     };
-  }, [lastMouseMove]);
+  }, [isMouseOnScreen]);
+
+  // Hide cog after 5 seconds of no movement
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isMouseOnScreen && Date.now() - lastMouseMove > 5000) {
+        setShowCog(false);
+        setShowPanel(false);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isMouseOnScreen, lastMouseMove]);
 
   const handleCogClick = (e: React.MouseEvent) => {
     e.stopPropagation();
