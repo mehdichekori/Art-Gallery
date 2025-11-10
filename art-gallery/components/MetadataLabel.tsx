@@ -3,12 +3,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArtPiece } from '@/types/art';
+import { useSettings } from '@/hooks/useSettings';
 
 interface MetadataLabelProps {
   artPiece: ArtPiece;
 }
 
 export default function MetadataLabel({ artPiece }: MetadataLabelProps) {
+  const { showDetailsBeforeClick } = useSettings();
+
+  // Don't render if showDetailsBeforeClick is false
+  if (!showDetailsBeforeClick) {
+    return null;
+  }
+
   const containerVariants = {
     hidden: {
       opacity: 0,
