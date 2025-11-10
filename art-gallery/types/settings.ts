@@ -1,7 +1,8 @@
-export type RefreshFrequency = 5000 | 15000 | 30000 | 60000 | 300000 | 600000 | 900000 | 1800000 | 3600000;
+export type RefreshFrequency = 5000 | 10000 | 15000 | 30000 | 60000 | 300000 | 600000 | 900000 | 1800000 | 3600000;
 
 export const REFRESH_FREQUENCIES: { value: RefreshFrequency; label: string }[] = [
   { value: 5000, label: '5 seconds' },
+  { value: 10000, label: '10 seconds' },
   { value: 15000, label: '15 seconds' },
   { value: 30000, label: '30 seconds' },
   { value: 60000, label: '1 minute' },
@@ -46,5 +47,5 @@ export const defaultSettings: Settings = {
   showDetailsBeforeClick: false,
   theme: 'light',
   canvasSize: 'extra-large',
-  onlyHighlighted: true,
+  onlyHighlighted: false, 
 };
