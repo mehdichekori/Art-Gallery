@@ -95,21 +95,34 @@ export async function getRandomMetPainting(onlyHighlighted = false): Promise<Art
       throw new Error('No paintings found');
     }
 
-    // Try up to 10 random paintings to find one with an image
-    for (let i = 0; i < 10; i++) {
+    // Track failed IDs to avoid retrying them
+    const failedIds = new Set<number>();
+    const maxAttempts = 100; // Try up to 100 different paintings to find one with an image
+
+    // Keep trying until we find a valid image or exhaust all options
+    while (failedIds.size < objectIds.length && failedIds.size < maxAttempts) {
       const randomId = objectIds[Math.floor(Math.random() * objectIds.length)];
+
+      // Skip already tried IDs
+      if (failedIds.has(randomId)) {
+        continue;
+      }
 
       try {
         const objectResponse = await fetch(`${MET_API_BASE}/objects/${randomId}`, {
           cache: 'no-store',
         });
 
-        if (!objectResponse.ok) continue;
+        if (!objectResponse.ok) {
+          failedIds.add(randomId);
+          continue;
+        }
 
         const artwork: MetMuseumObject = await objectResponse.json();
 
         // Skip if no image
         if (!artwork.primaryImage || artwork.primaryImage === '') {
+          failedIds.add(randomId);
           continue;
         }
 
@@ -136,11 +149,13 @@ export async function getRandomMetPainting(onlyHighlighted = false): Promise<Art
 
         return artPiece;
       } catch (err) {
-        // Continue to next artwork if this one fails
+        // Add to failed IDs and continue to next artwork if this one fails
+        failedIds.add(randomId);
         continue;
       }
     }
 
+    console.warn(`No valid artwork with image found after checking ${failedIds.size} items`);
     return null;
   } catch (error) {
     console.error('Error fetching from Met Museum:', error);
