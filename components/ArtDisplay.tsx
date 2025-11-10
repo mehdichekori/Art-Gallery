@@ -11,11 +11,12 @@ interface ArtDisplayProps {
   frameStyle: FrameStyle;
   isExpanded: boolean;
   canvasSize: CanvasSize;
+  isOpeningPanel?: boolean;
 }
 
 export type FrameStyle = 'classic' | 'thin-black' | 'gold' | 'ornate' | 'modern';
 
-export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, canvasSize }: ArtDisplayProps) {
+export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, canvasSize, isOpeningPanel }: ArtDisplayProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -41,12 +42,28 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
     animate: {
       opacity: 1,
       scale: 1,
+      x: 0,
       filter: 'brightness(1)',
       transition: {
         duration: 0.7,
         ease: [0.25, 0.1, 0.25, 1] as const,
         opacity: { duration: 0.6 },
         scale: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] as const },
+        x: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const },
+        filter: { duration: 0.8 }
+      }
+    },
+    expanded: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      filter: 'brightness(1)',
+      transition: {
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1] as const,
+        opacity: { duration: 0.6 },
+        scale: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] as const },
+        x: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const },
         filter: { duration: 0.8 }
       }
     },
@@ -100,7 +117,7 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
           className="artwork-frame"
           variants={frameVariants}
           initial="initial"
-          animate="animate"
+          animate={isExpanded ? (isOpeningPanel ? "expanded" : "animate") : "animate"}
           exit="exit"
           onClick={onClick}
           style={{

@@ -18,6 +18,7 @@ export default function Gallery() {
   const [error, setError] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [expandedInfo, setExpandedInfo] = useState(false);
+  const [isOpeningPanel, setIsOpeningPanel] = useState(false);
   const [highlightIds, setHighlightIds] = useState<Set<string>>(new Set());
   const [totalHighlights, setTotalHighlights] = useState<number>(0);
   const [hasCheckedAllHighlights, setHasCheckedAllHighlights] = useState(false);
@@ -119,6 +120,7 @@ export default function Gallery() {
 
   const handleArtworkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setIsOpeningPanel(true);
     setExpandedInfo(true);
   };
 
@@ -126,6 +128,7 @@ export default function Gallery() {
     if (e) {
       e.stopPropagation();
     }
+    setIsOpeningPanel(false);
     setExpandedInfo(false);
   };
 
@@ -180,22 +183,31 @@ export default function Gallery() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {currentArt && expandedInfo && (
-          <div className="artwork-with-panel-container" onClick={(e) => e.stopPropagation()}>
+          <motion.div
+            className="artwork-with-panel-container"
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          >
             <ArtDisplay
               artPiece={currentArt}
               onClick={(e) => handleArtworkClick(e)}
               frameStyle={currentFrame}
               isExpanded={true}
               canvasSize={canvasSize}
+              isOpeningPanel={isOpeningPanel}
             />
             <ExpandedInfo
               artPiece={currentArt}
               isOpen={expandedInfo}
               onClose={handleCloseExpanded}
+              isOpeningPanel={isOpeningPanel}
             />
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
