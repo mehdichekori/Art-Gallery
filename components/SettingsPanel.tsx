@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useSettings } from '@/hooks/useSettings';
-import { REFRESH_FREQUENCIES, CANVAS_SIZES, Theme } from '@/types/settings';
+import { REFRESH_FREQUENCIES, CANVAS_SIZES, Theme, RefreshFrequency, CanvasSize } from '@/types/settings';
 
 interface SettingsPanelProps {
   onClose: () => void;
@@ -70,7 +70,7 @@ export default function SettingsPanel({ onClose, onBackdropClick }: SettingsPane
             <select
               className="settings-select"
               value={refreshFrequency}
-              onChange={(e) => updateRefreshFrequency(Number(e.target.value) as any)}
+              onChange={(e) => updateRefreshFrequency(Number(e.target.value) as RefreshFrequency)}
             >
               {REFRESH_FREQUENCIES.map((freq) => (
                 <option key={freq.value} value={freq.value}>
@@ -89,7 +89,7 @@ export default function SettingsPanel({ onClose, onBackdropClick }: SettingsPane
             <select
               className="settings-select"
               value={canvasSize}
-              onChange={(e) => updateCanvasSize(e.target.value as any)}
+              onChange={(e) => updateCanvasSize(e.target.value as CanvasSize)}
             >
               {CANVAS_SIZES.map((size) => (
                 <option key={size.value} value={size.value}>
@@ -127,7 +127,7 @@ export default function SettingsPanel({ onClose, onBackdropClick }: SettingsPane
               <span>Only Highlighted Works</span>
             </label>
             <div className="settings-description">
-              Display only highlighted artworks from the museum's permanent collection
+              Display only highlighted artworks from the museum&apos;s permanent collection
             </div>
           </div>
 

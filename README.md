@@ -1,49 +1,59 @@
 # 🎨 Digital Art Gallery Screensaver
 
-A minimalist, fullscreen digital art gallery that cycles through beautiful paintings from world-renowned museums. Displaying each artwork for 30-60 seconds with elegant museum-style metadata labels.
+A minimalist, fullscreen digital art gallery that cycles through beautiful paintings from The Metropolitan Museum of Art. Features adjustable refresh intervals, multiple canvas sizes, and enriched Wikipedia context for each artwork.
 
-![Digital Art Gallery](https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-4.9-blue?style=for-the-badge&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.23-ff6f9c?style=for-the-badge)
 
 ## ✨ Features
 
-- **Auto-Rotating Paintings**: Displays a random painting every 45 seconds with smooth fade transitions
-- **Museum-Style Labels**: Elegant metadata display showing artist, title, year, medium, and museum
-- **Dynamic Frame Styles**: Randomly selected frames (classic, thin black, gold, ornate, modern) for each artwork
-- **Rich Context**: Click any artwork to expand detailed information and artist biographies (via Wikipedia)
-- **Single API Source**: Fetches from The Metropolitan Museum of Art API
-- **Responsive Design**: Optimized for desktop, tablet, mobile, and smart TVs
+- **Customizable Refresh Rate**: Choose from 10 refresh intervals (5 seconds to 60 minutes)
+- **Multiple Canvas Sizes**: 4 display sizes from small (400×300) to extra large (1000×750)
+- **Highlighted Artworks Mode**: Filter to show only museum-selected highlights
+- **Enriched Context**: Click any artwork to view detailed information with artist biographies and artwork descriptions fetched from Wikipedia
+- **Wikidata Integration**: Enhanced accuracy using Wikidata IDs to retrieve the most relevant Wikipedia information for both artworks and artists
+- **Light/Dark Theme**: Toggle between museum lighting modes
+- **Advanced Caching**: Intelligent API caching for smooth, fast artwork transitions
+- **Responsive Design**: Optimized for all screen sizes and devices
 - **No Backend Required**: All data fetched directly from public APIs
 - **Fullscreen Support**: Perfect for use as a digital screensaver
 
 ## 🚀 Live Demo
 
-Visit the live gallery: [https://your-gallery.vercel.app](https://your-gallery.vercel.app)
+Visit the live gallery: [https://mck-art-gallery.vercel.app](https://mck-art-gallery.vercel.app)
 
 ## 🏛️ Data Sources
 
 ### Primary API
 1. **The Metropolitan Museum of Art API** (No API key required)
    - 400,000+ artworks
-   - High-quality images
-   - Rich metadata
+   - High-quality images with thumbnails
+   - Rich metadata including dimensions, culture, period, classification
+   - Wikidata URLs for artworks and artists
    - Always available
 
-### Secondary API
-2. **Wikipedia REST API** (No API key required)
-   - Artist biographies
-   - Artwork context and stories
-   - Additional historical information
+### Enrichment APIs
+2. **Wikidata API** (No API key required)
+   - Cross-reference artwork and artist entities
+   - Ensures accurate Wikipedia article linking
+   - Resolves Wikipedia page titles from Wikidata IDs
+
+3. **Wikipedia REST API** (No API key required)
+   - Artist biographies and historical context
+   - Artwork descriptions and significance
+   - Additional historical and cultural information
 
 ## 🛠️ Tech Stack
 
 - **Framework**: Next.js 16 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS + Custom CSS
-- **Animations**: Framer Motion
-- **APIs**: The Met Museum, Wikipedia
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4 (latest)
+- **Animations**: Framer Motion 12.23
+- **APIs**: The Met Museum, Wikidata, Wikipedia
 - **Deployment**: Vercel (free tier)
+- **React**: 19.2.0
 
 ## 📦 Installation
 
@@ -94,21 +104,28 @@ npm start
 
 ## 🎨 Customization
 
-### Change Rotation Interval
-Edit `components/Gallery.tsx`:
+### Adjust Settings (in-app)
+The gallery includes a settings panel accessible via the settings cog icon:
+- **Refresh Frequency**: Choose from 5 seconds to 60 minutes
+- **Canvas Size**: Select from 4 different display sizes
+- **Theme**: Toggle between light and dark modes
+- **Highlighted Only**: Filter to show only museum-curated highlights
+- **Auto-show Details**: Automatically display metadata without clicking
+
+### Update Default Settings
+Edit `types/settings.ts`:
 ```typescript
-const ROTATION_INTERVAL = 45000; // 45 seconds (default)
+export const defaultSettings: Settings = {
+  refreshFrequency: 15000, // 15 seconds
+  showDetailsBeforeClick: false,
+  theme: 'light',
+  canvasSize: 'extra-large',
+  onlyHighlighted: false,
+};
 ```
 
-### Modify Frame Styles
-Edit `app/globals.css` and look for `.frame-*` classes:
-```css
-.frame-classic { /* Your custom frame */ }
-.frame-thin-black { /* Your custom frame */ }
-```
-
-### Update Colors
-Modify CSS custom properties in `app/globals.css`:
+### Modify Colors
+Update CSS custom properties in `app/globals.css`:
 ```css
 :root {
   --background: #0f0f0f;        /* Gallery background */
@@ -118,75 +135,98 @@ Modify CSS custom properties in `app/globals.css`:
 }
 ```
 
-### Add New Museums
-Create a new API file in `lib/apis/`:
-```typescript
-// lib/apis/newmuseum.ts
-export async function getRandomNewMuseumPainting(): Promise<ArtPiece | null> {
-  // Your API implementation
-}
-```
-
-Then update `lib/apis/index.ts` to include your new source.
-
 ## 📁 Project Structure
 
 ```
 art-gallery/
 ├── app/
-│   ├── globals.css          # Global styles and frame CSS
+│   ├── globals.css          # Global styles, frame CSS, and theming
 │   ├── layout.tsx           # Root layout
 │   └── page.tsx             # Home page
 ├── components/
-│   ├── Gallery.tsx          # Main gallery component
+│   ├── Gallery.tsx          # Main gallery component with auto-refresh
 │   ├── ArtDisplay.tsx       # Artwork display with frame
-│   ├── MetadataLabel.tsx    # Museum-style label
-│   └── ExpandedInfo.tsx     # Expanded details panel
+│   ├── MetadataLabel.tsx    # Museum-style metadata label
+│   ├── ExpandedInfo.tsx     # Expanded details panel with Wikipedia content
+│   ├── SettingsPanel.tsx    # Settings configuration panel
+│   └── SettingsCog.tsx      # Settings toggle button
 ├── hooks/
 │   └── useFrameSelector.ts  # Random frame selection
 ├── lib/
 │   └── apis/
-│       ├── index.ts         # Unified API service
-│       └── met.ts           # The Met Museum API
-└── types/
-    └── art.ts               # TypeScript definitions
+│       ├── index.ts         # Unified API service with enrichment
+│       └── met.ts           # The Met Museum, Wikidata & Wikipedia APIs
+├── types/
+│   ├── art.ts               # ArtPiece and API response types
+│   └── settings.ts          # Settings and configuration types
+└── public/                  # Static assets
 ```
 
 ## 🎯 Performance Optimizations
 
+- ✅ Object ID caching: Pre-fetches and caches artwork object IDs to avoid repeated API calls
+- ✅ Automatic loading state management: Prevents duplicate API requests
+- ✅ Smart retry logic: Tries up to 100 different artworks to find one with a valid image
 - ✅ Image preloading for smooth transitions
-- ✅ Client-side caching of API responses
 - ✅ Optimized bundle size with code splitting
 - ✅ Lazy loading of images
-- ✅ Static generation where possible
 - ✅ Efficient re-rendering with React hooks
+- ✅ Throttled refresh intervals with user customization
 
 ## 🐛 Troubleshooting
 
 ### No artworks loading
 - Check your internet connection
 - The Met Museum API is sometimes slow - wait a moment
+- Enable "Highlighted Only" mode to filter to museum-curated pieces
 - Check browser console for errors
 
 ### Build errors
 - Clear Next.js cache: `rm -rf .next`
 - Delete node_modules and reinstall: `rm -rf node_modules && npm install`
-- Ensure you're using Node.js 16 or higher
+- Ensure you're using Node.js 18 or higher
+
+### Settings not persisting
+- Settings are stored in localStorage and should persist across sessions
+- Check that localStorage is not disabled in your browser
+- Clear browser cache if settings appear to be stuck
 
 ## 📝 API Reference
 
 ### ArtPiece Interface
 ```typescript
 interface ArtPiece {
-  title: string;           // Artwork title
-  artist: string;          // Artist name
-  year: string;            // Year created
-  medium: string;          // Art medium
-  imageUrl: string;        // Image URL
-  museum: string;          // Museum name
-  description?: string;    // Optional description
-  objectId?: string;       // Optional object ID
-  wikiUrl?: string;        // Optional Wikipedia link
+  title: string;              // Artwork title
+  artist: string;             // Artist name
+  year: string;               // Year created
+  medium: string;             // Art medium
+  imageUrl: string;           // Image URL
+  museum: string;             // Museum name
+  description?: string;       // Enriched description from Wikipedia
+  objectId?: string;          // Met Museum object ID
+  wikiUrl?: string;           // Wikipedia page URL
+  objectUrl?: string;         // Met Museum object page URL
+  dimensions?: string;        // Artwork dimensions
+  culture?: string;           // Culture/region
+  period?: string;            // Historical period
+  classification?: string;    // Object classification
+  creditLine?: string;        // Museum credit information
+  department?: string;        // Museum department
+  primaryImageSmall?: string; // Thumbnail image URL
+  isHighlight?: boolean;      // Whether it's a museum highlight
+  objectWikidataUrl?: string; // Wikidata entity URL for artwork
+  artistWikidataUrl?: string; // Wikidata entity URL for artist
+}
+```
+
+### Settings Interface
+```typescript
+interface Settings {
+  refreshFrequency: RefreshFrequency;  // 5s to 60min
+  showDetailsBeforeClick: boolean;     // Auto-show metadata
+  theme: Theme;                         // 'light' | 'dark'
+  canvasSize: CanvasSize;               // 'small' | 'medium' | 'large' | 'extra-large'
+  onlyHighlighted: boolean;             // Show only highlights
 }
 ```
 
@@ -207,8 +247,9 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🙏 Acknowledgments
 
-- [The Metropolitan Museum of Art](https://www.metmuseum.org/) for their open access collection
-- [Wikipedia](https://www.wikipedia.org/) for additional context and biographies
+- [The Metropolitan Museum of Art](https://www.metmuseum.org/) for their open access collection and API
+- [Wikidata](https://www.wikidata.org/) for entity linking and cross-referencing
+- [Wikipedia](https://www.wikipedia.org/) for enriched context and biographies
 - [Vercel](https://vercel.com/) for hosting and deployment
 
 ## 📞 Support
@@ -219,4 +260,4 @@ If you have any questions or need help, please:
 
 ---
 
-**Enjoy your art gallery! 🎨**
+**Enjoy exploring art from The Met's collection! 🎨**

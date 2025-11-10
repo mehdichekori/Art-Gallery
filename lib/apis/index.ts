@@ -1,4 +1,4 @@
-import { ArtPiece } from '@/types/art';
+import { ArtPiece, WikipediaSummary } from '@/types/art';
 import {
   getRandomMetPainting,
   getWikipediaSummary,
@@ -28,8 +28,8 @@ export async function getEnrichedPainting(onlyHighlighted = false): Promise<ArtP
   console.log('[Enrich] Wikidata URLs - object:', painting.objectWikidataUrl, 'artist:', painting.artistWikidataUrl);
 
   try {
-    let workSummary: any = null;
-    let authorSummary: any = null;
+    let workSummary: WikipediaSummary | null = null;
+    let authorSummary: WikipediaSummary | null = null;
     let workWikiUrl: string | undefined;
     let authorWikiUrl: string | undefined;
 
