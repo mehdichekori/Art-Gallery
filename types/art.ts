@@ -17,6 +17,8 @@ export interface ArtPiece {
   department?: string;
   primaryImageSmall?: string;
   isHighlight?: boolean;
+  objectWikidataUrl?: string;
+  artistWikidataUrl?: string;
 }
 
 export interface MetMuseumObject {
@@ -38,6 +40,8 @@ export interface MetMuseumObject {
   classification?: string;
   creditLine?: string;
   department?: string;
+  objectWikidata_URL?: string;
+  artistWikidata_URL?: string;
 }
 
 export interface WikipediaSummary {
@@ -47,4 +51,9 @@ export interface WikipediaSummary {
       page: string;
     };
   };
+}
+
+export interface EnrichedWikipediaInfo {
+  workSummary?: WikipediaSummary | null;
+  authorSummary?: WikipediaSummary | null;
 }

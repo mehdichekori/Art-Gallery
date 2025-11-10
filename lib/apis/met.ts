@@ -145,6 +145,8 @@ export async function getRandomMetPainting(onlyHighlighted = false): Promise<Art
           department: artwork.department || undefined,
           primaryImageSmall: artwork.primaryImageSmall || undefined,
           isHighlight: onlyHighlighted,
+          objectWikidataUrl: artwork.objectWikidata_URL || undefined,
+          artistWikidataUrl: artwork.artistWikidata_URL || undefined,
         };
 
         return artPiece;
@@ -164,22 +166,72 @@ export async function getRandomMetPainting(onlyHighlighted = false): Promise<Art
 }
 
 /**
+ * Get Wikipedia page title from Wikidata ID
+ */
+export async function getWikipediaPageTitleFromWikidata(wikidataUrl: string): Promise<string | null> {
+  try {
+    const wikidataId = wikidataUrl.split('/').pop();
+    console.log('[Wikidata] Fetching Wikipedia page title for:', wikidataUrl, 'ID:', wikidataId);
+
+    if (!wikidataId) {
+      console.log('[Wikidata] No Wikidata ID found in URL');
+      return null;
+    }
+
+    const response = await fetch(
+      `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&props=sitelinks&ids=${wikidataId}&sitefilter=enwiki&origin=*`,
+      {
+        cache: 'no-store',
+        headers: {
+          'Accept': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log('[Wikidata] API response not OK:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    const entity = data.entities?.[wikidataId];
+    const sitelinks = entity?.sitelinks;
+
+    if (sitelinks?.enwiki?.title) {
+      console.log('[Wikidata] Found Wikipedia page title:', sitelinks.enwiki.title);
+      return sitelinks.enwiki.title;
+    }
+
+    console.log('[Wikidata] No enwiki title found in sitelinks');
+    return null;
+  } catch (error) {
+    console.error('[Wikidata] Error fetching from Wikidata:', error);
+    return null;
+  }
+}
+
+/**
  * Get Wikipedia summary for extra context
  */
 export async function getWikipediaSummary(query: string): Promise<WikipediaSummary | null> {
   try {
+    console.log('[Wikipedia] Fetching summary for query:', query);
+
     const response = await fetch(
       `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`,
       { cache: 'no-store' }
     );
 
     if (!response.ok) {
+      console.log('[Wikipedia] API response not OK:', response.status);
       return null;
     }
 
-    return await response.json();
+    const data = await response.json();
+    console.log('[Wikipedia] Got summary with extract length:', data.extract?.length || 0);
+    return data;
   } catch (error) {
-    console.error('Error fetching Wikipedia:', error);
+    console.error('[Wikipedia] Error fetching Wikipedia:', error);
     return null;
   }
 }
