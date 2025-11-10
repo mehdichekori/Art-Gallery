@@ -131,7 +131,6 @@ export async function getRandomMetPainting(onlyHighlighted = false): Promise<Art
           creditLine: artwork.creditLine || undefined,
           department: artwork.department || undefined,
           primaryImageSmall: artwork.primaryImageSmall || undefined,
-          tags: artwork.tags ? artwork.tags.map(tag => tag.term).filter(Boolean) : undefined,
           isHighlight: onlyHighlighted,
         };
 
