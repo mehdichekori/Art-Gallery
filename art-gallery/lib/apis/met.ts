@@ -2,30 +2,86 @@ import { ArtPiece, MetMuseumObject, WikipediaSummary } from '@/types/art';
 
 const MET_API_BASE = 'https://collectionapi.metmuseum.org/public/collection/v1';
 
+// Cache for object IDs to avoid repeated API calls
+let cachedObjectIds: number[] | null = null;
+let cachedHighlightedIds: number[] | null = null;
+let isLoadingRegular = false;
+let isLoadingHighlighted = false;
+
 /**
  * Search for painting object IDs from The Met Museum
  */
 async function getPaintingObjectIds(onlyHighlighted = false): Promise<number[]> {
-  const params = new URLSearchParams({
-    medium: 'Paintings',
-    q: 'painting',
-  });
-
+  // Return cached IDs if available
   if (onlyHighlighted) {
-    params.append('isHighlight', 'true');
+    if (cachedHighlightedIds) {
+      return cachedHighlightedIds;
+    }
+    if (isLoadingHighlighted) {
+      // Wait for the ongoing request to complete
+      while (isLoadingHighlighted) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      return cachedHighlightedIds || [];
+    }
+  } else {
+    if (cachedObjectIds) {
+      return cachedObjectIds;
+    }
+    if (isLoadingRegular) {
+      // Wait for the ongoing request to complete
+      while (isLoadingRegular) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      return cachedObjectIds || [];
+    }
   }
 
-  const response = await fetch(
-    `${MET_API_BASE}/search?${params.toString()}`,
-    { cache: 'no-store' }
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to search Met Museum API');
+  // Set loading state
+  if (onlyHighlighted) {
+    isLoadingHighlighted = true;
+  } else {
+    isLoadingRegular = true;
   }
 
-  const data = await response.json();
-  return data.objectIDs || [];
+  try {
+    const params = new URLSearchParams({
+      medium: 'Paintings',
+      q: 'painting',
+    });
+
+    if (onlyHighlighted) {
+      params.append('isHighlight', 'true');
+    }
+
+    const response = await fetch(
+      `${MET_API_BASE}/search?${params.toString()}`,
+      { cache: 'no-store' }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to search Met Museum API');
+    }
+
+    const data = await response.json();
+    const objectIds = data.objectIDs || [];
+
+    // Cache the results
+    if (onlyHighlighted) {
+      cachedHighlightedIds = objectIds;
+    } else {
+      cachedObjectIds = objectIds;
+    }
+
+    return objectIds;
+  } finally {
+    // Clear loading state
+    if (onlyHighlighted) {
+      isLoadingHighlighted = false;
+    } else {
+      isLoadingRegular = false;
+    }
+  }
 }
 
 /**
