@@ -43,7 +43,7 @@ export interface Settings {
 }
 
 export const defaultSettings: Settings = {
-  refreshFrequency: 15000, // 15 seconds
+  refreshFrequency: 30000, // 30 seconds
   showDetailsBeforeClick: false,
   theme: 'light',
   canvasSize: 'extra-large',
