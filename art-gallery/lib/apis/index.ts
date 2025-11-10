@@ -1,34 +1,11 @@
 import { ArtPiece } from '@/types/art';
 import { getRandomMetPainting, getWikipediaSummary } from './met';
-import { getRandomRijksmuseumPainting } from './rijksmuseum';
 
 /**
- * Get a random painting from any available source
+ * Get a random painting from The Met Museum
  */
 export async function getRandomPainting(onlyHighlighted = false): Promise<ArtPiece | null> {
-  // Try both APIs
-  const [metPainting, rijksmuseumPainting] = await Promise.allSettled([
-    getRandomMetPainting(onlyHighlighted),
-    getRandomRijksmuseumPainting(),
-  ]);
-
-  // Collect all successful results
-  const paintings: ArtPiece[] = [];
-
-  if (metPainting.status === 'fulfilled' && metPainting.value) {
-    paintings.push(metPainting.value);
-  }
-
-  if (rijksmuseumPainting.status === 'fulfilled' && rijksmuseumPainting.value) {
-    paintings.push(rijksmuseumPainting.value);
-  }
-
-  if (paintings.length === 0) {
-    return null;
-  }
-
-  // Return a random painting from available sources
-  return paintings[Math.floor(Math.random() * paintings.length)];
+  return getRandomMetPainting(onlyHighlighted);
 }
 
 /**

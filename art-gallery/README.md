@@ -12,7 +12,7 @@ A minimalist, fullscreen digital art gallery that cycles through beautiful paint
 - **Museum-Style Labels**: Elegant metadata display showing artist, title, year, medium, and museum
 - **Dynamic Frame Styles**: Randomly selected frames (classic, thin black, gold, ornate, modern) for each artwork
 - **Rich Context**: Click any artwork to expand detailed information and artist biographies (via Wikipedia)
-- **Multiple API Sources**: Fetches from The Met Museum API, Rijksmuseum API, and Wikipedia
+- **Single API Source**: Fetches from The Metropolitan Museum of Art API
 - **Responsive Design**: Optimized for desktop, tablet, mobile, and smart TVs
 - **No Backend Required**: All data fetched directly from public APIs
 - **Fullscreen Support**: Perfect for use as a digital screensaver
@@ -23,19 +23,15 @@ Visit the live gallery: [https://your-gallery.vercel.app](https://your-gallery.v
 
 ## 🏛️ Data Sources
 
-### Primary APIs
+### Primary API
 1. **The Metropolitan Museum of Art API** (No API key required)
    - 400,000+ artworks
    - High-quality images
    - Rich metadata
-
-2. **Rijksmuseum API** (Free API key required)
-   - 1+ million Dutch artworks
-   - Detailed descriptions
-   - [Get your free API key](https://www.rijksmuseum.nl/en/contact)
+   - Always available
 
 ### Secondary API
-3. **Wikipedia REST API** (No API key required)
+2. **Wikipedia REST API** (No API key required)
    - Artist biographies
    - Artwork context and stories
    - Additional historical information
@@ -46,7 +42,7 @@ Visit the live gallery: [https://your-gallery.vercel.app](https://your-gallery.v
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS + Custom CSS
 - **Animations**: Framer Motion
-- **APIs**: The Met Museum, Rijksmuseum, Wikipedia
+- **APIs**: The Met Museum, Wikipedia
 - **Deployment**: Vercel (free tier)
 
 ## 📦 Installation
@@ -62,21 +58,12 @@ Visit the live gallery: [https://your-gallery.vercel.app](https://your-gallery.v
    npm install
    ```
 
-3. **Set up environment variables (optional)**
-   ```bash
-   cp .env.example .env.local
-   ```
-   Edit `.env.local` and add your Rijksmuseum API key:
-   ```
-   NEXT_PUBLIC_RIJKSMUSEUM_API_KEY=your_rijksmuseum_api_key_here
-   ```
-
-4. **Run the development server**
+3. **Run the development server**
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
+4. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 🏗️ Build for Production
@@ -103,12 +90,7 @@ npm start
    - Go to [vercel.com](https://vercel.com)
    - Import your GitHub repository
    - Vercel will automatically detect Next.js and build your project
-   - Add environment variables in Vercel dashboard (optional)
-
-3. **Get Rijksmuseum API Key** (Optional but recommended)
-   - Visit [Rijksmuseum contact page](https://www.rijksmuseum.nl/en/contact)
-   - Request a free API key
-   - Add it to your Vercel environment variables
+   - No environment variables required!
 
 ## 🎨 Customization
 
@@ -165,8 +147,7 @@ art-gallery/
 ├── lib/
 │   └── apis/
 │       ├── index.ts         # Unified API service
-│       ├── met.ts           # The Met Museum API
-│       └── rijksmuseum.ts   # Rijksmuseum API
+│       └── met.ts           # The Met Museum API
 └── types/
     └── art.ts               # TypeScript definitions
 ```
@@ -186,11 +167,6 @@ art-gallery/
 - Check your internet connection
 - The Met Museum API is sometimes slow - wait a moment
 - Check browser console for errors
-
-### Rijksmuseum not working
-- Verify your API key in `.env.local`
-- Ensure the key is added to Vercel environment variables
-- API key format should be: `NEXT_PUBLIC_RIJKSMUSEUM_API_KEY=xxxxx`
 
 ### Build errors
 - Clear Next.js cache: `rm -rf .next`
@@ -232,7 +208,6 @@ This project is open source and available under the [MIT License](LICENSE).
 ## 🙏 Acknowledgments
 
 - [The Metropolitan Museum of Art](https://www.metmuseum.org/) for their open access collection
-- [Rijksmuseum](https://www.rijksmuseum.nl/) for their API and artwork data
 - [Wikipedia](https://www.wikipedia.org/) for additional context and biographies
 - [Vercel](https://vercel.com/) for hosting and deployment
 
