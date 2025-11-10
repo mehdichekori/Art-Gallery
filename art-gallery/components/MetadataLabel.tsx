@@ -1,6 +1,4 @@
 'use client';
-
-import React from 'react';
 import { motion } from 'framer-motion';
 import { ArtPiece } from '@/types/art';
 import { useSettings } from '@/hooks/useSettings';
@@ -29,9 +27,9 @@ export default function MetadataLabel({ artPiece }: MetadataLabelProps) {
       filter: 'blur(0px)',
       transition: {
         duration: 0.6,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.25, 0.1, 0.25, 1] as const,
         opacity: { duration: 0.5 },
-        y: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
+        y: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] as const },
         filter: { duration: 0.6 }
       }
     },
@@ -41,9 +39,9 @@ export default function MetadataLabel({ artPiece }: MetadataLabelProps) {
       filter: 'blur(2px)',
       transition: {
         duration: 0.4,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.25, 0.1, 0.25, 1] as const,
         opacity: { duration: 0.3 },
-        y: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] },
+        y: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const },
         filter: { duration: 0.4 }
       }
     }
@@ -57,7 +55,7 @@ export default function MetadataLabel({ artPiece }: MetadataLabelProps) {
       transition: {
         delay: i * 0.08,
         duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1]
+        ease: [0.25, 0.1, 0.25, 1] as const
       }
     }),
     exit: {
@@ -65,7 +63,7 @@ export default function MetadataLabel({ artPiece }: MetadataLabelProps) {
       y: -4,
       transition: {
         duration: 0.3,
-        ease: [0.25, 0.1, 0.25, 1]
+        ease: [0.25, 0.1, 0.25, 1] as const
       }
     }
   };
