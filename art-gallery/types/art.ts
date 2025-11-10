@@ -40,20 +40,6 @@ export interface MetMuseumObject {
   department?: string;
 }
 
-export interface RijksmuseumObject {
-  id: string;
-  title: string;
-  longTitle: string;
-  principalOrFirstMaker: string;
-  productionPlaces?: string[];
-  label?: {
-    description: string;
-  };
-  webImage: {
-    url: string;
-  };
-}
-
 export interface WikipediaSummary {
   extract: string;
   content_urls?: {
