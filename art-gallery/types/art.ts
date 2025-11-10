@@ -17,6 +17,7 @@ export interface ArtPiece {
   department?: string;
   primaryImageSmall?: string;
   tags?: string[];
+  isHighlight?: boolean;
 }
 
 export interface MetMuseumObject {

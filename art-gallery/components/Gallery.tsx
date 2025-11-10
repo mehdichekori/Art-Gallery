@@ -18,8 +18,11 @@ export default function Gallery() {
   const [error, setError] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [expandedInfo, setExpandedInfo] = useState(false);
+  const [highlightIds, setHighlightIds] = useState<Set<string>>(new Set());
+  const [totalHighlights, setTotalHighlights] = useState<number>(0);
+  const [hasCheckedAllHighlights, setHasCheckedAllHighlights] = useState(false);
   const { currentFrame, selectRandomFrame } = useFrameSelector();
-  const { refreshFrequency, canvasSize } = useSettings();
+  const { refreshFrequency, canvasSize, onlyHighlighted, updateOnlyHighlighted } = useSettings();
 
   // Fetch initial artwork
   useEffect(() => {
@@ -37,14 +40,40 @@ export default function Gallery() {
     return () => clearInterval(interval);
   }, [currentArt, nextArt, refreshFrequency]);
 
+  // Auto-disable highlights when we've shown enough of them
+  useEffect(() => {
+    if (onlyHighlighted && highlightIds.size > 0 && highlightIds.size % 50 === 0) {
+      // After showing 50, 100, 150, etc. highlights, there's a chance we've seen most/all
+      // Disable highlights to show the full collection
+      console.log(`Shown ${highlightIds.size} highlights, switching to full collection`);
+      updateOnlyHighlighted(false);
+      setHasCheckedAllHighlights(true);
+    }
+  }, [highlightIds.size, onlyHighlighted, updateOnlyHighlighted]);
+
   const loadArtwork = async (preload = false) => {
     try {
       setError(null);
-      const artPiece = await getEnrichedPainting();
+      const artPiece = await getEnrichedPainting(onlyHighlighted);
 
       if (!artPiece) {
         setError('No artwork found. Please try again.');
         return;
+      }
+
+      // Track highlight IDs and check if we've shown all highlights
+      if (onlyHighlighted && artPiece.objectId) {
+        setHighlightIds(prev => {
+          const newSet = new Set(prev);
+          newSet.add(artPiece.objectId!);
+          return newSet;
+        });
+
+        // Auto-disable highlights when we've shown all available ones
+        if (!hasCheckedAllHighlights) {
+          setHasCheckedAllHighlights(true);
+          // We'll check after a few highlights have been shown
+        }
       }
 
       if (preload) {

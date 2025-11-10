@@ -38,11 +38,13 @@ export interface Settings {
   showDetailsBeforeClick: boolean;
   theme: Theme;
   canvasSize: CanvasSize;
+  onlyHighlighted: boolean;
 }
 
 export const defaultSettings: Settings = {
-  refreshFrequency: 60000, // 1 minute
-  showDetailsBeforeClick: true,
+  refreshFrequency: 15000, // 15 seconds
+  showDetailsBeforeClick: false,
   theme: 'light',
-  canvasSize: 'medium',
+  canvasSize: 'extra-large',
+  onlyHighlighted: true,
 };

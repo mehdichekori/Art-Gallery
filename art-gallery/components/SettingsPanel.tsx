@@ -15,10 +15,12 @@ export default function SettingsPanel({ onClose, onBackdropClick }: SettingsPane
     showDetailsBeforeClick,
     theme,
     canvasSize,
+    onlyHighlighted,
     updateRefreshFrequency,
     updateShowDetailsBeforeClick,
     updateTheme,
     updateCanvasSize,
+    updateOnlyHighlighted,
     resetSettings,
   } = useSettings();
 
@@ -110,6 +112,22 @@ export default function SettingsPanel({ onClose, onBackdropClick }: SettingsPane
             </label>
             <div className="settings-description">
               Display artwork metadata (title, artist, etc.) before clicking on a piece
+            </div>
+          </div>
+
+          {/* Highlighted Only Section */}
+          <div className="settings-section">
+            <label className="settings-label">
+              <input
+                type="checkbox"
+                className="settings-checkbox"
+                checked={onlyHighlighted}
+                onChange={(e) => updateOnlyHighlighted(e.target.checked)}
+              />
+              <span>Only Highlighted Works</span>
+            </label>
+            <div className="settings-description">
+              Display only highlighted artworks from the museum's permanent collection
             </div>
           </div>
 

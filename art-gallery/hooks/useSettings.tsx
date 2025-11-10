@@ -8,6 +8,7 @@ interface SettingsContextType extends Settings {
   updateShowDetailsBeforeClick: (show: boolean) => void;
   updateTheme: (theme: Theme) => void;
   updateCanvasSize: (size: CanvasSize) => void;
+  updateOnlyHighlighted: (onlyHighlighted: boolean) => void;
   resetSettings: () => void;
 }
 
@@ -55,6 +56,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setSettings(prev => ({ ...prev, canvasSize: size }));
   };
 
+  const updateOnlyHighlighted = (onlyHighlighted: boolean) => {
+    setSettings(prev => ({ ...prev, onlyHighlighted }));
+  };
+
   const resetSettings = () => {
     setSettings(defaultSettings);
   };
@@ -67,6 +72,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         updateShowDetailsBeforeClick,
         updateTheme,
         updateCanvasSize,
+        updateOnlyHighlighted,
         resetSettings,
       }}
     >
