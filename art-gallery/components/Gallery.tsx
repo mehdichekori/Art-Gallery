@@ -7,7 +7,9 @@ import { getEnrichedPainting } from '@/lib/apis';
 import ArtDisplay from './ArtDisplay';
 import MetadataLabel from './MetadataLabel';
 import ExpandedInfo from './ExpandedInfo';
+import SettingsCog from './SettingsCog';
 import { useFrameSelector } from '@/hooks/useFrameSelector';
+import { useSettings } from '@/hooks/useSettings';
 
 const ROTATION_INTERVAL = 45000; // 45 seconds (between 30-60)
 
@@ -19,6 +21,7 @@ export default function Gallery() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [expandedInfo, setExpandedInfo] = useState(false);
   const { currentFrame, selectRandomFrame } = useFrameSelector();
+  const { refreshFrequency, canvasSize } = useSettings();
 
   // Fetch initial artwork
   useEffect(() => {
@@ -31,10 +34,10 @@ export default function Gallery() {
 
     const interval = setInterval(() => {
       rotateArtwork();
-    }, ROTATION_INTERVAL);
+    }, refreshFrequency);
 
     return () => clearInterval(interval);
-  }, [currentArt, nextArt]);
+  }, [currentArt, nextArt, refreshFrequency]);
 
   const loadArtwork = async (preload = false) => {
     try {
@@ -140,6 +143,7 @@ export default function Gallery() {
             frameStyle={currentFrame}
             isExpanded={false}
             isTransitioning={isTransitioning}
+            canvasSize={canvasSize}
           />
         )}
       </AnimatePresence>
@@ -159,6 +163,7 @@ export default function Gallery() {
               frameStyle={currentFrame}
               isExpanded={true}
               isTransitioning={isTransitioning}
+              canvasSize={canvasSize}
             />
             <ExpandedInfo
               artPiece={currentArt}
@@ -171,6 +176,9 @@ export default function Gallery() {
 
       {/* Preload indicator */}
       {nextArt && <div style={{ display: 'none' }} />}
+
+      {/* Settings Cog */}
+      <SettingsCog />
     </div>
   );
 }

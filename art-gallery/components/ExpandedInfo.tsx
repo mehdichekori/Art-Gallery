@@ -159,7 +159,7 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
           )}
 
           {artPiece.tags && artPiece.tags.length > 0 && (
-            <motion.div className="museum-tags" variants={itemVariants}>
+            <motion.div className="museum-tags">
               {artPiece.tags.map((tag, index) => (
                 <motion.span
                   key={index}

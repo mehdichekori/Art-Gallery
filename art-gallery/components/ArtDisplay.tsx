@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArtPiece } from '@/types/art';
+import { CanvasSize, getCanvasDimensions } from '@/types/settings';
 
 interface ArtDisplayProps {
   artPiece: ArtPiece;
@@ -10,13 +11,17 @@ interface ArtDisplayProps {
   frameStyle: FrameStyle;
   isExpanded: boolean;
   isTransitioning?: boolean;
+  canvasSize: CanvasSize;
 }
 
 export type FrameStyle = 'classic' | 'thin-black' | 'gold' | 'ornate' | 'modern';
 
-export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, isTransitioning }: ArtDisplayProps) {
+export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, isTransitioning, canvasSize }: ArtDisplayProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  // Get canvas dimensions based on size setting
+  const { width: canvasWidth, height: canvasHeight } = getCanvasDimensions(canvasSize);
 
   // Reset image loaded state when art piece changes
   useEffect(() => {
@@ -37,9 +42,9 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
       filter: 'brightness(1)',
       transition: {
         duration: 0.7,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.25, 0.1, 0.25, 1] as const,
         opacity: { duration: 0.6 },
-        scale: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] },
+        scale: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] as const },
         filter: { duration: 0.8 }
       }
     },
@@ -49,9 +54,9 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
       filter: 'brightness(1.1)',
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.25, 0.1, 0.25, 1] as const,
         opacity: { duration: 0.4 },
-        scale: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
+        scale: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const },
         filter: { duration: 0.5 }
       }
     }
@@ -64,7 +69,7 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
       scale: 1.02,
       transition: {
         duration: 0.6,
-        ease: [0.25, 0.1, 0.25, 1]
+        ease: [0.25, 0.1, 0.25, 1] as const
       }
     },
     fadeOut: {
@@ -72,7 +77,7 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
       scale: 0.98,
       transition: {
         duration: 0.4,
-        ease: [0.25, 0.1, 0.25, 1]
+        ease: [0.25, 0.1, 0.25, 1] as const
       }
     },
     visible: {
@@ -80,7 +85,7 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
       scale: 1,
       transition: {
         duration: 0.8,
-        ease: [0.25, 0.1, 0.25, 1]
+        ease: [0.25, 0.1, 0.25, 1] as const
       }
     }
   };
@@ -96,12 +101,20 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
           animate="animate"
           exit="exit"
           onClick={onClick}
+          style={{
+            width: isExpanded ? 'auto' : `${canvasWidth}px`,
+            height: isExpanded ? 'auto' : `${canvasHeight}px`,
+          }}
         >
           <motion.div
             className={`frame frame-${frameStyle}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.2 }}
+            style={{
+              width: isExpanded ? 'auto' : `${canvasWidth}px`,
+              height: isExpanded ? 'auto' : `${canvasHeight}px`,
+            }}
           >
             <AnimatePresence mode="wait">
               {!imageError ? (
@@ -117,6 +130,11 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
                   style={{
+                    width: isExpanded ? 'auto' : `${canvasWidth}px`,
+                    height: isExpanded ? 'auto' : `${canvasHeight}px`,
+                    maxWidth: isExpanded ? '90vw' : '100%',
+                    maxHeight: isExpanded ? '75vh' : '100%',
+                    objectFit: 'contain' as const,
                     opacity: imageLoaded ? 1 : 0,
                     transition: 'opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)'
                   }}
@@ -127,6 +145,10 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: 'easeInOut' }}
+                  style={{
+                    width: isExpanded ? 'auto' : `${canvasWidth}px`,
+                    height: isExpanded ? 'auto' : `${canvasHeight}px`,
+                  }}
                 >
                   <p>Image not available</p>
                   <p className="text-sm mt-2">{artPiece.title}</p>
