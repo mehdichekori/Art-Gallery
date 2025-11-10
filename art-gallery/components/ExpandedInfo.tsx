@@ -73,19 +73,6 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
     }
   };
 
-  const tagVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: (i: number) => ({
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.3,
-        ease: [0.25, 0.1, 0.25, 1] as const,
-        delay: i * 0.03
-      }
-    })
-  };
-
   return (
     <motion.div
       className="museum-info-panel-inline"
@@ -147,21 +134,6 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
           {artPiece.description && (
             <motion.div className="museum-description" variants={itemVariants}>
               <p>{artPiece.description}</p>
-            </motion.div>
-          )}
-
-          {artPiece.tags && artPiece.tags.length > 0 && (
-            <motion.div className="museum-tags">
-              {artPiece.tags.map((tag, index) => (
-                <motion.span
-                  key={index}
-                  className="museum-tag"
-                  variants={tagVariants}
-                  custom={index}
-                >
-                  {tag}
-                </motion.span>
-              ))}
             </motion.div>
           )}
 

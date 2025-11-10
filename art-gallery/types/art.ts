@@ -16,7 +16,6 @@ export interface ArtPiece {
   creditLine?: string;
   department?: string;
   primaryImageSmall?: string;
-  tags?: string[];
   isHighlight?: boolean;
 }
 
@@ -34,7 +33,6 @@ export interface MetMuseumObject {
   dimensions: string;
   repository: string;
   objectURL: string;
-  tags?: Array<{ term: string }>;
   culture?: string;
   period?: string;
   classification?: string;
