@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArtPiece } from '@/types/art';
 import { getEnrichedPainting } from '@/lib/apis';
@@ -10,8 +10,6 @@ import ExpandedInfo from './ExpandedInfo';
 import SettingsCog from './SettingsCog';
 import { useFrameSelector } from '@/hooks/useFrameSelector';
 import { useSettings } from '@/hooks/useSettings';
-
-const ROTATION_INTERVAL = 45000; // 45 seconds (between 30-60)
 
 export default function Gallery() {
   const [currentArt, setCurrentArt] = useState<ArtPiece | null>(null);
@@ -139,10 +137,9 @@ export default function Gallery() {
           <ArtDisplay
             key={currentArt.objectId || currentArt.title}
             artPiece={currentArt}
-            onClick={handleArtworkClick}
+            onClick={(e) => handleArtworkClick(e)}
             frameStyle={currentFrame}
             isExpanded={false}
-            isTransitioning={isTransitioning}
             canvasSize={canvasSize}
           />
         )}
@@ -159,10 +156,9 @@ export default function Gallery() {
           <div className="artwork-with-panel-container" onClick={(e) => e.stopPropagation()}>
             <ArtDisplay
               artPiece={currentArt}
-              onClick={handleArtworkClick}
+              onClick={(e) => handleArtworkClick(e)}
               frameStyle={currentFrame}
               isExpanded={true}
-              isTransitioning={isTransitioning}
               canvasSize={canvasSize}
             />
             <ExpandedInfo

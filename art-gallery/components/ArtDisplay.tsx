@@ -7,16 +7,15 @@ import { CanvasSize, getCanvasDimensions } from '@/types/settings';
 
 interface ArtDisplayProps {
   artPiece: ArtPiece;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   frameStyle: FrameStyle;
   isExpanded: boolean;
-  isTransitioning?: boolean;
   canvasSize: CanvasSize;
 }
 
 export type FrameStyle = 'classic' | 'thin-black' | 'gold' | 'ornate' | 'modern';
 
-export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, isTransitioning, canvasSize }: ArtDisplayProps) {
+export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, canvasSize }: ArtDisplayProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -25,8 +24,11 @@ export default function ArtDisplay({ artPiece, onClick, frameStyle, isExpanded, 
 
   // Reset image loaded state when art piece changes
   useEffect(() => {
-    setImageLoaded(false);
-    setImageError(false);
+    const resetImageState = () => {
+      setImageLoaded(false);
+      setImageError(false);
+    };
+    resetImageState();
   }, [artPiece.objectId]);
 
   // Smooth frame transition variants

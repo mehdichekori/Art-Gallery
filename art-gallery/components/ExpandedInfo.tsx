@@ -1,6 +1,4 @@
 'use client';
-
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArtPiece } from '@/types/art';
 
@@ -27,11 +25,11 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
       scale: 1,
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.25, 0.1, 0.25, 1] as const,
         opacity: { duration: 0.4 },
-        x: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
+        x: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const },
         filter: { duration: 0.6 },
-        scale: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }
+        scale: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const }
       }
     },
     exit: {
@@ -41,9 +39,9 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
       scale: 0.99,
       transition: {
         duration: 0.35,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.25, 0.1, 0.25, 1] as const,
         opacity: { duration: 0.25 },
-        x: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] },
+        x: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] as const },
         filter: { duration: 0.35 }
       }
     }
@@ -56,7 +54,7 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
       y: 0,
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.25, 0.1, 0.25, 1] as const,
         staggerChildren: 0.05,
         delayChildren: 0.1
       }
@@ -70,7 +68,7 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
       y: 0,
       transition: {
         duration: 0.4,
-        ease: [0.25, 0.1, 0.25, 1]
+        ease: [0.25, 0.1, 0.25, 1] as const
       }
     }
   };
@@ -82,7 +80,7 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
       scale: 1,
       transition: {
         duration: 0.3,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.25, 0.1, 0.25, 1] as const,
         delay: i * 0.03
       }
     })
@@ -138,12 +136,6 @@ export default function ExpandedInfo({ artPiece, isOpen, onClose }: ExpandedInfo
                 <span className="museum-metadata-value">{artPiece.classification}</span>
               </div>
             )}
-            {/* {artPiece.department && (
-              <div className="metadata-row">
-                <span className="museum-metadata-label">Department</span>
-                <span className="museum-metadata-value">{artPiece.department}</span>
-              </div>
-            )} */}
           </motion.div>
 
           {artPiece.creditLine && (
