@@ -24,6 +24,9 @@
   --foreground: #1a1a1a;
   --frame-color: #6b5d4d;
   --matte-color: #ffffff;
+  --museum-text-primary: #000000;
+  --museum-text-secondary: rgba(0, 0, 0, 0.85);
+  --museum-text-tertiary: rgba(0, 0, 0, 0.7);
 }
 
 * {
