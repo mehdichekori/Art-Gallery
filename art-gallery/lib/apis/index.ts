@@ -5,10 +5,10 @@ import { getRandomRijksmuseumPainting } from './rijksmuseum';
 /**
  * Get a random painting from any available source
  */
-export async function getRandomPainting(): Promise<ArtPiece | null> {
+export async function getRandomPainting(onlyHighlighted = false): Promise<ArtPiece | null> {
   // Try both APIs
   const [metPainting, rijksmuseumPainting] = await Promise.allSettled([
-    getRandomMetPainting(),
+    getRandomMetPainting(onlyHighlighted),
     getRandomRijksmuseumPainting(),
   ]);
 
@@ -34,8 +34,8 @@ export async function getRandomPainting(): Promise<ArtPiece | null> {
 /**
  * Get enriched painting with Wikipedia context
  */
-export async function getEnrichedPainting(): Promise<ArtPiece | null> {
-  const painting = await getRandomPainting();
+export async function getEnrichedPainting(onlyHighlighted = false): Promise<ArtPiece | null> {
+  const painting = await getRandomPainting(onlyHighlighted);
 
   if (!painting) {
     return null;

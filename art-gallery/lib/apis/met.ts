@@ -5,9 +5,18 @@ const MET_API_BASE = 'https://collectionapi.metmuseum.org/public/collection/v1';
 /**
  * Search for painting object IDs from The Met Museum
  */
-async function getPaintingObjectIds(): Promise<number[]> {
+async function getPaintingObjectIds(onlyHighlighted = false): Promise<number[]> {
+  const params = new URLSearchParams({
+    medium: 'Paintings',
+    q: 'painting',
+  });
+
+  if (onlyHighlighted) {
+    params.append('isHighlight', 'true');
+  }
+
   const response = await fetch(
-    `${MET_API_BASE}/search?medium=Paintings&q=painting`,
+    `${MET_API_BASE}/search?${params.toString()}`,
     { cache: 'no-store' }
   );
 
@@ -22,9 +31,9 @@ async function getPaintingObjectIds(): Promise<number[]> {
 /**
  * Get a random painting from The Met Museum
  */
-export async function getRandomMetPainting(): Promise<ArtPiece | null> {
+export async function getRandomMetPainting(onlyHighlighted = false): Promise<ArtPiece | null> {
   try {
-    const objectIds = await getPaintingObjectIds();
+    const objectIds = await getPaintingObjectIds(onlyHighlighted);
 
     if (objectIds.length === 0) {
       throw new Error('No paintings found');
@@ -67,6 +76,7 @@ export async function getRandomMetPainting(): Promise<ArtPiece | null> {
           department: artwork.department || undefined,
           primaryImageSmall: artwork.primaryImageSmall || undefined,
           tags: artwork.tags ? artwork.tags.map(tag => tag.term).filter(Boolean) : undefined,
+          isHighlight: onlyHighlighted,
         };
 
         return artPiece;
