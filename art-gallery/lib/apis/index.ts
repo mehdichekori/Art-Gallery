@@ -42,8 +42,10 @@ export async function getEnrichedPainting(onlyHighlighted = false): Promise<ArtP
   }
 
   try {
-    // Try to get Wikipedia summary for context
-    const wikiSummary = await getWikipediaSummary(`${painting.artist} ${painting.title}`);
+    // Try to get Wikipedia summary for context - use artist name only
+    // as it's more likely to have a Wikipedia page than the artwork itself
+    const artistName = painting.artist.replace(/\s*\([^)]*\)\s*/g, '').trim();
+    const wikiSummary = await getWikipediaSummary(artistName);
 
     if (wikiSummary && wikiSummary.extract) {
       return {
